@@ -467,6 +467,7 @@ public class LiquidFloatingCell : LiquittableCircle {
 
     public var responsible = true
     public var imageView = UIImageView()
+    public var titleLabel = UILabel()
     weak var actionButton: LiquidFloatingActionButton?
 
     // for implement responsible color
@@ -490,19 +491,26 @@ public class LiquidFloatingCell : LiquittableCircle {
         setupView(view)
     }
     
-    public init(icon: UIImage) {
+    public init(icon: UIImage, title: String?) {
         self.originalColor = UIColor.clearColor()
         super.init()
-        setup(icon)
+        setup(icon, title: title)
     }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setup(image: UIImage, tintColor: UIColor = UIColor.whiteColor()) {
+    func setup(image: UIImage, tintColor: UIColor = UIColor.whiteColor(), title: String? = nil) {
         imageView.image = image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         imageView.tintColor = tintColor
+        
+        if let labelTitle = title {
+            titleLabel.text = labelTitle
+            titleLabel.textColor = UIColor.whiteColor()
+            titleLabel.sizeToFit()
+            setupView(titleLabel)
+        }
         setupView(imageView)
     }
     
@@ -515,6 +523,7 @@ public class LiquidFloatingCell : LiquittableCircle {
     private func resizeSubviews() {
         let size = CGSize(width: frame.width * 0.5, height: frame.height * 0.5)
         imageView.frame = CGRect(x: frame.width - frame.width * internalRatio, y: frame.height - frame.height * internalRatio, width: size.width, height: size.height)
+        titleLabel.center = CGPoint(x: imageView.frame.center.x - 60, y: imageView.frame.center.y)
     }
     
     func update(key: CGFloat, open: Bool) {
